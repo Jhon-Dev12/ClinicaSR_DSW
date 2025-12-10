@@ -1,0 +1,6 @@
+<Solution>
+  <Project Path="ClinicaSR.BL.BC/ClinicaSR.BL.BC.csproj" />
+  <Project Path="ClinicaSR.BL.BE/ClinicaSR.BL.BE.csproj" />
+  <Project Path="ClinicaSR.DL.DALC/ClinicaSR.DL.DALC.csproj" />
+  <Project Path="Clinica_SantaRosa/Clinica_SantaRosa.PL.WebApp.csproj" />
+</Solution>

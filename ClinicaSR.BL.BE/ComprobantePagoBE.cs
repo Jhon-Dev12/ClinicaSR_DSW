@@ -1,0 +1,38 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
+
+namespace ClinicaSR.BL.BE
+{
+    public class ComprobantePagoBE
+    {
+        public int ID_Comprobante {  get; set; } 
+   
+	    public string Nombre_Pagador {  get; set; } 
+        public string Apellidos_Pagador { get; set; }
+        public string DNI_Pagador { get; set; }
+        public string Contacto_Pagador { get; set; }
+        public DateTime Fecha_Emision {  get; set; }
+        public Decimal Monto {  get; set; } 
+        public Metodos Metodo_Pago { get; set; }
+        public Estados Estado_Pago { get; set; }
+
+
+
+    }
+
+
+    public enum Metodos
+    {
+            EFECTIVO,
+            TARJETA, 
+            TRANSFERENCIA              
+
+    }
+    public enum Estados
+    {
+        EMITIDO, 
+        ANULADO
+            //Falta el por defecto agregarlo 
+    }
+}
