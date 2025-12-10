@@ -1,0 +1,25 @@
+# Ignorar carpetas bin y obj
+bin/
+obj/
+
+# Ignorar archivos específicos de Visual Studio
+.vs/
+.vscode/
+
+# Ignorar archivos de compilación en .NET
+*.dll
+*.pdb
+*.exe
+*.mdb
+*.cache
+
+# Ignorar archivos de configuración de compilación
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Ignorar archivos temporales de Visual Studio
+*.log
+*.suo
+*.tmp
