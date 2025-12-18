@@ -9,6 +9,11 @@ namespace ClinicaSR.DL.DALC
 {
     public class UsuarioDALC
     {
+        public List<UsuarioBE> ListarUsuarios()
+        {
+            throw new NotImplementedException();
+        }
+
         public List<UsuarioBE> listaUsuarios()
         {
 

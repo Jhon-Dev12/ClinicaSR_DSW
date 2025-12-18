@@ -1,5 +1,8 @@
-﻿using System;
+﻿using ClinicaSR.BL.BE;
+using Microsoft.Data.SqlClient;
+using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Text;
 
 namespace ClinicaSR.DL.DALC
@@ -8,7 +11,7 @@ namespace ClinicaSR.DL.DALC
     {
         public PacienteBE registrarPaciente(PacienteBE pacienteBE)
         {
-            using (SqlConnection con = ConexionDALC.GetConnectionBDTiendaCarros())
+            using (SqlConnection con = ConexionDALC.GetConnectionBDSeg())
             {
                 SqlCommand cmd = new SqlCommand("USP_Registrar_Paciente", con);
                 cmd.CommandType = CommandType.StoredProcedure;
@@ -47,7 +50,7 @@ namespace ClinicaSR.DL.DALC
         {
             List<PacienteBE> lista = new List<PacienteBE>();
 
-            using (SqlConnection con = ConexionDALC.GetConnectionBDTiendaCarros())
+            using (SqlConnection con = ConexionDALC.GetConnectionBDHospital())
             {
                 SqlCommand cmd = new SqlCommand("USP_Listar_Pacientes", con);
                 cmd.CommandType = CommandType.StoredProcedure;
@@ -89,7 +92,7 @@ namespace ClinicaSR.DL.DALC
         {
             bool actualizado = false;
 
-            using (SqlConnection con = ConexionDALC.GetConnectionBDTiendaCarros())
+            using (SqlConnection con = ConexionDALC.GetConnectionBDHospital())
             {
                 SqlCommand cmd = new SqlCommand("USP_Actualizar_Paciente", con);
                 cmd.CommandType = CommandType.StoredProcedure;
@@ -127,7 +130,7 @@ namespace ClinicaSR.DL.DALC
         {
             bool eliminado = false;
 
-            using (SqlConnection con = ConexionDALC.GetConnectionBDTiendaCarros())
+            using (SqlConnection con = ConexionDALC.GetConnectionBDHospital())
             {
                 SqlCommand cmd = new SqlCommand("USP_Eliminar_Paciente", con);
                 cmd.CommandType = CommandType.StoredProcedure;
@@ -160,13 +163,13 @@ namespace ClinicaSR.DL.DALC
         {
             PacienteBE paciente = null;
 
-            using (SqlConnection con = ConexionDALC.GetConnectionBDTiendaCarros())
+            using (SqlConnection con = ConexionDALC.GetConnectionBDHospital())
             {
                 SqlCommand cmd = new SqlCommand("USP_Obtener_Paciente_PorID", con);
                 cmd.CommandType = CommandType.StoredProcedure;
                 cmd.Parameters.AddWithValue("@ID_Paciente", idPaciente);
 
-                SqlDataReader dr = null;
+                SqlDataReader dr = null;    
                 try
                 {
                     con.Open();
@@ -195,6 +198,26 @@ namespace ClinicaSR.DL.DALC
             }
 
             return paciente;
+        }
+
+        public bool ActualizarPaciente(PacienteBE pacienteBE)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool EliminarPaciente(int idPaciente)
+        {
+            throw new NotImplementedException();
+        }
+
+        public PacienteBE BuscarPacientePorId(int idPaciente)
+        {
+            throw new NotImplementedException();
+        }
+
+        public PacienteBE RegistrarPaciente(PacienteBE pacienteBE)
+        {
+            throw new NotImplementedException();
         }
     }
 }

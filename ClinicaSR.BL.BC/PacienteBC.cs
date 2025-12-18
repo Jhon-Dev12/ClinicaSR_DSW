@@ -1,4 +1,6 @@
-﻿using System;
+﻿using ClinicaSR.BL.BE;
+using ClinicaSR.DL.DALC;
+using System;
 using System.Collections.Generic;
 using System.Text;
 

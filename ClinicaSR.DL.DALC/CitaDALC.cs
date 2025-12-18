@@ -1,19 +1,21 @@
-﻿using System;
+﻿using ClinicaSR.BL.BE;
+using Microsoft.Data.SqlClient;
+using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Text;
 
 namespace ClinicaSR.DL.DALC
 {
     public class CitaDALC
     {
-        public class CitaDALC
-        {
+        
             // 1. Listar todas las citas
             public List<CitaBE> ListarCitas()
             {
                 List<CitaBE> lista = new List<CitaBE>();
 
-                using (SqlConnection con = ConexionDALC.GetConnectionBDTiendaCarros())
+                using (SqlConnection con = ConexionDALC.GetConnectionBDHospital())
                 {
                     SqlCommand cmd = new SqlCommand("USP_Listar_Citas", con);
                     cmd.CommandType = CommandType.StoredProcedure;
@@ -70,7 +72,7 @@ namespace ClinicaSR.DL.DALC
             {
                 bool actualizado = false;
 
-                using (SqlConnection con = ConexionDALC.GetConnectionBDTiendaCarros())
+                using (SqlConnection con = ConexionDALC.GetConnectionBDHospital())
                 {
                     SqlCommand cmd = new SqlCommand("USP_Actualizar_Cita", con);
                     cmd.CommandType = CommandType.StoredProcedure;
@@ -104,4 +106,4 @@ namespace ClinicaSR.DL.DALC
 
         }
     }
-}
+

@@ -1,5 +1,8 @@
-﻿using System;
+﻿using ClinicaSR.BL.BE;
+using Microsoft.Data.SqlClient;
+using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Text;
 
 namespace ClinicaSR.DL.DALC
@@ -10,7 +13,7 @@ namespace ClinicaSR.DL.DALC
         {
             List<EspecialidadBE> lista = new List<EspecialidadBE>();
 
-            using (SqlConnection con = ConexionDALC.GetConnectionBDTiendaCarros())
+            using (SqlConnection con = ConexionDALC.GetConnectionBDHospital())
             {
                 SqlCommand cmd = new SqlCommand("USP_Listar_Especialidades", con);
                 cmd.CommandType = CommandType.StoredProcedure;
@@ -48,7 +51,7 @@ namespace ClinicaSR.DL.DALC
         {
             int idInsertado = 0;
 
-            using (SqlConnection con = ConexionDALC.GetConnectionBDTiendaCarros())
+            using (SqlConnection con = ConexionDALC.GetConnectionBDHospital())
             {
                 SqlCommand cmd = new SqlCommand("USP_Insertar_Especialidad", con);
                 cmd.CommandType = CommandType.StoredProcedure;
@@ -81,7 +84,7 @@ namespace ClinicaSR.DL.DALC
         {
             bool eliminado = false;
 
-            using (SqlConnection con = ConexionDALC.GetConnectionBDTiendaCarros())
+            using (SqlConnection con = ConexionDALC.GetConnectionBDHospital())
             {
                 SqlCommand cmd = new SqlCommand("USP_Eliminar_Especialidad", con);
                 cmd.CommandType = CommandType.StoredProcedure;
@@ -114,7 +117,7 @@ namespace ClinicaSR.DL.DALC
         {
             bool actualizado = false;
 
-            using (SqlConnection con = ConexionDALC.GetConnectionBDTiendaCarros())
+            using (SqlConnection con = ConexionDALC.GetConnectionBDHospital())
             {
                 SqlCommand cmd = new SqlCommand("USP_Actualizar_Especialidad", con);
                 cmd.CommandType = CommandType.StoredProcedure;

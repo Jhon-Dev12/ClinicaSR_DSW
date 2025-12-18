@@ -1,19 +1,21 @@
-﻿using System;
+﻿using ClinicaSR.BL.BE;
+using Microsoft.Data.SqlClient;
+using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Text;
 
 namespace ClinicaSR.DL.DALC
 {
     public class HorarioAtencionDALC
     {
-        public class HorarioAtencionDALC
-        {
+       
             // 1. Listar horarios
             public List<HorarioAtencionBE> ListarHorarios()
             {
                 List<HorarioAtencionBE> lista = new List<HorarioAtencionBE>();
 
-                using (SqlConnection con = ConexionDALC.GetConnectionBDTiendaCarros())
+                using (SqlConnection con = ConexionDALC.GetConnectionBDHospital())
                 {
                     SqlCommand cmd = new SqlCommand("USP_Listar_Horarios", con);
                     cmd.CommandType = CommandType.StoredProcedure;
@@ -57,7 +59,7 @@ namespace ClinicaSR.DL.DALC
             // 2. Registrar horario
             public HorarioAtencionBE registrarHorario(HorarioAtencionBE horarioBE)
             {
-                using (SqlConnection con = ConexionDALC.GetConnectionBDTiendaCarros())
+                using (SqlConnection con = ConexionDALC.GetConnectionBDHospital())
                 {
                     SqlCommand cmd = new SqlCommand("USP_Insertar_Horario", con);
                     cmd.CommandType = CommandType.StoredProcedure;
@@ -92,7 +94,7 @@ namespace ClinicaSR.DL.DALC
             // 3. Editar horario
             public HorarioAtencionBE editarHorario(HorarioAtencionBE horarioBE)
             {
-                using (SqlConnection con = ConexionDALC.GetConnectionBDTiendaCarros())
+                using (SqlConnection con = ConexionDALC.GetConnectionBDHospital())
                 {
                     SqlCommand cmd = new SqlCommand("USP_Actualizar_Horario", con);
                     cmd.CommandType = CommandType.StoredProcedure;
@@ -131,7 +133,7 @@ namespace ClinicaSR.DL.DALC
             {
                 bool eliminado = false;
 
-                using (SqlConnection con = ConexionDALC.GetConnectionBDTiendaCarros())
+                using (SqlConnection con = ConexionDALC.GetConnectionBDHospital())
                 {
                     SqlCommand cmd = new SqlCommand("USP_Eliminar_Horario", con);
                     cmd.CommandType = CommandType.StoredProcedure;
@@ -158,6 +160,25 @@ namespace ClinicaSR.DL.DALC
 
                 return eliminado;
             }
+
+        public void EliminarHorarioPorId(int idHorario)
+        {
+            throw new NotImplementedException();
         }
+
+        public HorarioAtencionBE EditarHorario(HorarioAtencionBE horarioBE)
+        {
+            throw new NotImplementedException();
+        }
+
+        public HorarioAtencionBE RegistrarHorario(HorarioAtencionBE horarioBE)
+        {
+            throw new NotImplementedException();
+        }
+
+        
+
+        
     }
-}
+    }
+

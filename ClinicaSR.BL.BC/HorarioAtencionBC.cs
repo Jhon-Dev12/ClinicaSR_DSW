@@ -1,4 +1,6 @@
-﻿using System;
+﻿using ClinicaSR.BL.BE;
+using ClinicaSR.DL.DALC;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -13,12 +15,12 @@ namespace ClinicaSR.BL.BC
             return horarioDALC.ListarHorarios();
         }
 
-        public HorarioAtencionBE RegistrarHorario(HorarioBE horarioBE)
+        public HorarioAtencionBE RegistrarHorario(HorarioAtencionBE horarioBE)
         {
             return horarioDALC.RegistrarHorario(horarioBE);
         }
 
-        public HorarioAtencionBE EditarHorario(HorarioBE horarioBE)
+        public HorarioAtencionBE EditarHorario(HorarioAtencionBE horarioBE)
         {
             return horarioDALC.EditarHorario(horarioBE);
         }

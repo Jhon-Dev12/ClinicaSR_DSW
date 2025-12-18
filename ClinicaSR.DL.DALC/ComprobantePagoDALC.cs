@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Text;
 using ClinicaSR.BL.BE;
+using Microsoft.Data.SqlClient;
 
 namespace ClinicaSR.DL.DALC
 {
@@ -11,7 +13,7 @@ namespace ClinicaSR.DL.DALC
         {
             List<ComprobantePagoBE> lista = new List<ComprobantePagoBE>();
 
-            using (SqlConnection con = ConexionDALC.GetConnectionBDTiendaCarros())
+            using (SqlConnection con = ConexionDALC.GetConnectionBDHospital())
             {
                 SqlCommand cmd = new SqlCommand("USP_Listar_Comprobantes", con);
                 cmd.CommandType = CommandType.StoredProcedure;
@@ -56,7 +58,7 @@ namespace ClinicaSR.DL.DALC
         {
             bool actualizado = false;
 
-            using (SqlConnection con = ConexionDALC.GetConnectionBDTiendaCarros())
+            using (SqlConnection con = ConexionDALC.GetConnectionBDHospital())
             {
                 SqlCommand cmd = new SqlCommand("USP_Actualizar_Comprobante", con);
                 cmd.CommandType = CommandType.StoredProcedure;
