@@ -12,31 +12,42 @@
             string? usuarioID = context.Session.GetString("UsuarioID");
             string? usuarioRol = context.Session.GetString("UsuarioRol");
 
-            // 2. Definir Rutas Públicas (Excepciones)
-            if (path == "/" || path.Contains("/seguridad/login") || path.Contains("/css") || path.Contains("/js"))
+            // 1. Rutas Públicas e Imágenes (Importante incluir /images para tu logo/perfil)
+            if (path == "/" || path.Contains("/seguridad/login") || path.Contains("/css") ||
+                path.Contains("/js") || path.Contains("/images") || path.Contains("/lib"))
             {
                 await _next(context);
                 return;
             }
 
-            // 3. Protección contra "Saltos" por URL (Validar Sesión)
+            // 2. Si no hay sesión, siempre al Login
             if (string.IsNullOrEmpty(usuarioID))
             {
-                context.Response.Redirect("/seguridad/login");
+                context.Response.Redirect("/Seguridad/Login");
                 return;
             }
 
-            // 4. Gestión de Roles Centralizada
-            // Ejemplo: Solo el Administrador ve la gestión de usuarios
+            // 3. Validación de Roles por Ruta Real
             bool tieneAcceso = true;
 
-            if (path.StartsWith("/administrador") && usuarioRol != "ADMINISTRADOR") tieneAcceso = false;
-            else if (path.StartsWith("/recepcionista") && usuarioRol != "RECEPCIONISTA" && usuarioRol != "ADMINISTRADOR") tieneAcceso = false;
-            else if (path.StartsWith("/cajero") && usuarioRol != "CAJERO" && usuarioRol != "ADMINISTRADOR") tieneAcceso = false;
+            // Bloqueo para Panel Administrador
+            if (path.Contains("/home/paneladministrador") && usuarioRol != "ADMINISTRADOR")
+                tieneAcceso = false;
+
+            // Bloqueo para Panel Recepcionista
+            else if (path.Contains("/home/panelrecepcionista") && usuarioRol != "RECEPCIONISTA")
+                tieneAcceso = false;
+
+            // Bloqueo para Panel Cajero
+            else if (path.Contains("/home/panelcajero") && usuarioRol != "CAJERO")
+                tieneAcceso = false;
 
             if (!tieneAcceso)
             {
-                context.Response.Redirect("/seguridad/index");
+                // Si intenta entrar a un panel que no le toca, lo mandamos a SU panel correcto
+                if (usuarioRol == "ADMINISTRADOR") context.Response.Redirect("/Home/PanelAdministrador");
+                else if (usuarioRol == "RECEPCIONISTA") context.Response.Redirect("/Home/PanelRecepcionista");
+                else context.Response.Redirect("/Home/PanelCajero");
                 return;
             }
 

@@ -13,11 +13,10 @@ builder.Services.AddSession(options => {
 builder.Services.AddHttpContextAccessor();
 
 var app = builder.Build();
-
-app.UseSession();
-app.UseMiddleware<SecurityConfigMiddleware>();
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();
+app.UseSession();
+app.UseMiddleware<SecurityConfigMiddleware>();
 app.MapControllerRoute(name: "default", pattern: "{controller=Seguridad}/{action=Login}/{id?}");
 app.Run();

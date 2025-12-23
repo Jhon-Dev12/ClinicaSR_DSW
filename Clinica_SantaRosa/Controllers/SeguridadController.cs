@@ -18,6 +18,17 @@ namespace Clinica_SantaRosa.PL.WebApp.Controllers
 
         public IActionResult Login()
         {
+            // Verificar si ya existe el ID de usuario en la sesión
+            if (HttpContext.Session.GetString("UsuarioID") != null)
+            {
+                string rol = HttpContext.Session.GetString("UsuarioRol");
+
+                // Redirigir según el rol detectado en la sesión activa
+                if (rol == "ADMINISTRADOR") return RedirectToAction("PanelAdministrador", "Home");
+                if (rol == "RECEPCIONISTA") return RedirectToAction("PanelRecepcionista", "Home");
+                if (rol == "CAJERO") return RedirectToAction("PanelCajero", "Home");
+            }
+
             return View();
         }
 
@@ -35,7 +46,7 @@ namespace Clinica_SantaRosa.PL.WebApp.Controllers
                 HttpContext.Session.SetString("NombreCompleto", $"{usuario.Nombres} {usuario.Apellidos}");
                 // Si la imagen es nula en la BD, guardamos una cadena vacía o una ruta por defecto
                 string rutaFoto = string.IsNullOrEmpty(usuario.Img_Perfil)
-                                  ? "/img/default-user.png"
+                                  ? "/images/default-user.jpg"
                                   : usuario.Img_Perfil;
                 HttpContext.Session.SetString("FotoPerfil", rutaFoto);
                 // REDIRECCIÓN SEGÚN ROL
@@ -61,6 +72,7 @@ namespace Clinica_SantaRosa.PL.WebApp.Controllers
                 return RedirectToAction("Login", "Seguridad");
             }
         }
+        [HttpPost]
         public IActionResult Logout()
         {
             HttpContext.Session.Clear();
