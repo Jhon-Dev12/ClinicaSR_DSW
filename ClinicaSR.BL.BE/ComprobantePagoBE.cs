@@ -6,33 +6,29 @@ namespace ClinicaSR.BL.BE
 {
     public class ComprobantePagoBE
     {
-        public int ID_Comprobante {  get; set; } 
-   
-	    public string Nombre_Pagador {  get; set; } 
+        public long ID_Comprobante { get; set; }
+        public CitaBE CitaBE { get; set; }
+        public long Id_Usuario { get; set; }
+        public string Nombre_Pagador { get; set; }
         public string Apellidos_Pagador { get; set; }
         public string DNI_Pagador { get; set; }
         public string Contacto_Pagador { get; set; }
-        public DateTime Fecha_Emision {  get; set; }
-        public Decimal Monto {  get; set; } 
-        public Metodos Metodo_Pago { get; set; }
-        public Estados Estado_Pago { get; set; }
-
-
-
+        public DateTime Fecha_Emision { get; set; }
+        public Decimal Monto { get; set; }
+        public MetodoPago Metodo_Pago { get; set; }
+        public EstadoComprobante Estado_Pago { get; set; }
     }
 
-
-    public enum Metodos
+    public enum MetodoPago
     {
-            EFECTIVO,
-            TARJETA, 
-            TRANSFERENCIA              
-
+        EFECTIVO,
+        TARJETA,
+        TRANSFERENCIA
     }
-    public enum Estados
+
+    public enum EstadoComprobante
     {
-        EMITIDO, 
+        EMITIDO,
         ANULADO
-            //Falta el por defecto agregarlo 
     }
 }
