@@ -49,7 +49,7 @@
         }
 
         .navbar-logo {
-            width: 140px;
+            width: 180px;
             height: auto;
             transition: transform 0.2s;
         }
@@ -129,7 +129,7 @@
         <nav class="navbar navbar-expand-lg navbar-light navbar-custom sticky-top">
             <div class="container-fluid">
                 <a class="navbar-brand" asp-controller="Home" asp-action="PanelAdministrador">
-                    <img src="/images/ClinicaSantaRosaLogo.png" alt="Logo" class="navbar-logo">
+                    <img src="/images/SantaRosa.png" alt="Logo" class="navbar-logo">
                 </a>
 
                 <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
@@ -154,7 +154,7 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" asp-controller="Especialidades" asp-action="Index">
+                            <a class="nav-link" asp-controller="Especialidad" asp-action="Index">
                                 <i class="bi bi-shield-plus"></i>Especialidades
                             </a>
                         </li>
@@ -172,9 +172,6 @@
                                 <i class="bi bi-chevron-down ms-2 small text-muted"></i>
                             </a>
                             <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0 p-2 mt-2">
-                                <li><h6 class="dropdown-header">Administración</h6></li>
-                                <li><a class="dropdown-item rounded" href="#"><i class="bi bi-shield-lock me-2"></i>Seguridad</a></li>
-                                <li><hr class="dropdown-divider"></li>
                                 <li>
                                     <form asp-controller="Seguridad" asp-action="Logout" method="post">
                                         <button type="submit" class="dropdown-item rounded text-danger">

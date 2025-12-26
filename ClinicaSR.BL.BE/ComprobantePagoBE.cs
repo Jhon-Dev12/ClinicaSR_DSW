@@ -16,7 +16,7 @@ namespace ClinicaSR.BL.BE
         public DateTime Fecha_Emision { get; set; }
         public Decimal Monto { get; set; }
         public MetodoPago Metodo_Pago { get; set; }
-        public EstadoComprobante Estado_Pago { get; set; }
+        public EstadoComprobante Estado { get; set; }
     }
 
     public enum MetodoPago

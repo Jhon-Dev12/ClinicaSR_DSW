@@ -169,7 +169,7 @@
 <div class="main-container">
 
     <div class="text-center mb-5">
-        <img src="/images/ClinicaSantaRosaLogo.png" alt="Clinica SR" style="width: 180px;">
+        <img src="/images/SantaRosa.png" alt="Clinica SR" style="width: 230px;">
     </div>
 
     <div class="admin-header">
@@ -211,7 +211,7 @@
             <p>Planificación de turnos y disponibilidad médica.</p>
         </a>
 
-        <a asp-controller="Especialidades" asp-action="Index" class="card-option">
+        <a asp-controller="Especialidad" asp-action="Index" class="card-option">
             <i class="bi bi-heart-pulse-fill icon-display"></i>
             <h4>Servicios</h4>
             <p>Gestión de especialidades y áreas de atención.</p>
@@ -229,7 +229,44 @@
 @section Scripts {
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
-        const successMsg = '@TempData["Success"]';
-        if (successMsg) Swal.fire({ icon: 'success', title: 'Excelente', text: successMsg, confirmButtonColor: '#3b82f6' });
+        document.addEventListener("DOMContentLoaded", function() {
+            // Esperamos un momento para que el navegador procese el autocompletado y redirecciones
+            setTimeout(function() {
+                const successMsg = '@Html.Raw(TempData["Success"])';
+                const errorMsg = '@Html.Raw(TempData["Error"])';
+
+                if (successMsg && successMsg.trim() !== "") {
+                    Swal.fire({
+                        icon: 'success',
+                        title: '¡Operación Exitosa!',
+                        text: successMsg,
+                        confirmButtonColor: '#2563eb',
+                        timer: 5000,
+                        timerProgressBar: true
+                    });
+                }
+
+                if (errorMsg && errorMsg.trim() !== "") {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Atención',
+                        text: errorMsg,
+                        confirmButtonColor: '#ef4444'
+                    });
+                }
+            }, 800); // 800 milisegundos de espera
+        });
+
+        // Tu función de previsualización (se mantiene intacta)
+        function previewImage(event) {
+            const reader = new FileReader();
+            reader.onload = function(){
+                const output = document.getElementById('preview');
+                output.src = reader.result;
+                output.style.display = 'inline-block';
+            };
+            if(event.target.files[0]) reader.readAsDataURL(event.target.files[0]);
+        }
     </script>
+}
 }

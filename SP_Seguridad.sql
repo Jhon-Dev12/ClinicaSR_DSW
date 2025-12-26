@@ -82,9 +82,6 @@ BEGIN
 END
 GO
 
-EXEC USP_Usuario_ObtenerPorId '1'
-GO
-
 CREATE OR ALTER PROCEDURE USP_Usuario_ObtenerPorUsername
     @Username VARCHAR(50)
 AS
@@ -95,7 +92,4 @@ BEGIN
     FROM Usuario
     WHERE Username = @Username;
 END
-GO
-
-EXEC USP_Usuario_ObtenerPorUsername 'admin1'
 GO

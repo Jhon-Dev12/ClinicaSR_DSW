@@ -17,37 +17,34 @@ namespace ClinicaSR.DL.DALC
             {
                 SqlCommand cmd = new SqlCommand("USP_Listar_Especialidades", con);
                 cmd.CommandType = CommandType.StoredProcedure;
-                SqlDataReader dr = null;
 
                 try
                 {
                     con.Open();
-                    dr = cmd.ExecuteReader();
-                    while (dr.Read())
+                    using (SqlDataReader dr = cmd.ExecuteReader())
                     {
-                        EspecialidadBE esp = new EspecialidadBE
+                        while (dr.Read())
                         {
-                            ID_Especialidad = Convert.ToInt32(dr.GetInt64(0)),
-                            Nombre = dr.GetString(1)
-                        };
-                        lista.Add(esp);
+                            EspecialidadBE esp = new EspecialidadBE
+                            {
+                                ID_Especialidad = Convert.ToInt32(dr["ID_Especialidad"]),
+                                Nombre = dr["Nombre"].ToString()
+                            };
+
+                            lista.Add(esp);
+                        }
                     }
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine("Error al listar especialidades: " + ex.Message);
-                }
-                finally
-                {
-                    if (dr != null && !dr.IsClosed) dr.Close();
+                    throw new Exception("Error DALC - ListarEspecialidades", ex);
                 }
             }
 
             return lista;
         }
 
-
-        // 2. Insertar especialidad
+        // 2. INSERTAR
         public int Insertar(EspecialidadBE especialidadBE)
         {
             int idInsertado = 0;
@@ -57,7 +54,8 @@ namespace ClinicaSR.DL.DALC
                 SqlCommand cmd = new SqlCommand("USP_Insertar_Especialidad", con);
                 cmd.CommandType = CommandType.StoredProcedure;
 
-                cmd.Parameters.AddWithValue("@Nombre", especialidadBE.Nombre);
+                cmd.Parameters.Add("@Nombre", SqlDbType.VarChar, 100)
+                               .Value = especialidadBE.Nombre;
 
                 SqlParameter salida = new SqlParameter("@ID", SqlDbType.Int)
                 {
@@ -69,18 +67,20 @@ namespace ClinicaSR.DL.DALC
                 {
                     con.Open();
                     cmd.ExecuteNonQuery();
-                    idInsertado = Convert.ToInt32(salida.Value);
+
+                    if (salida.Value != DBNull.Value)
+                        idInsertado = Convert.ToInt32(salida.Value);
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine("Error al insertar especialidad: " + ex.Message);
+                    throw new Exception("Error DALC - InsertarEspecialidad", ex);
                 }
             }
 
             return idInsertado;
         }
 
-        // 3. Eliminar especialidad
+        // 3. ELIMINAR
         public bool Eliminar(int id)
         {
             bool eliminado = false;
@@ -90,7 +90,7 @@ namespace ClinicaSR.DL.DALC
                 SqlCommand cmd = new SqlCommand("USP_Eliminar_Especialidad", con);
                 cmd.CommandType = CommandType.StoredProcedure;
 
-                cmd.Parameters.AddWithValue("@ID", id);
+                cmd.Parameters.Add("@ID", SqlDbType.Int).Value = id;
 
                 SqlParameter result = new SqlParameter("@Result", SqlDbType.Bit)
                 {
@@ -102,18 +102,20 @@ namespace ClinicaSR.DL.DALC
                 {
                     con.Open();
                     cmd.ExecuteNonQuery();
-                    eliminado = Convert.ToBoolean(result.Value);
+
+                    if (result.Value != DBNull.Value)
+                        eliminado = Convert.ToBoolean(result.Value);
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine("Error al eliminar especialidad: " + ex.Message);
+                    throw new Exception("Error DALC - EliminarEspecialidad", ex);
                 }
             }
 
             return eliminado;
         }
 
-        // 4. Actualizar especialidad
+        // 4. ACTUALIZAR
         public bool Actualizar(EspecialidadBE especialidadBE)
         {
             bool actualizado = false;
@@ -123,8 +125,11 @@ namespace ClinicaSR.DL.DALC
                 SqlCommand cmd = new SqlCommand("USP_Actualizar_Especialidad", con);
                 cmd.CommandType = CommandType.StoredProcedure;
 
-                cmd.Parameters.AddWithValue("@ID", especialidadBE.ID_Especialidad);
-                cmd.Parameters.AddWithValue("@Nombre", especialidadBE.Nombre);
+                cmd.Parameters.Add("@ID", SqlDbType.Int)
+                               .Value = especialidadBE.ID_Especialidad;
+
+                cmd.Parameters.Add("@Nombre", SqlDbType.VarChar, 100)
+                               .Value = especialidadBE.Nombre;
 
                 SqlParameter result = new SqlParameter("@Result", SqlDbType.Bit)
                 {
@@ -136,11 +141,13 @@ namespace ClinicaSR.DL.DALC
                 {
                     con.Open();
                     cmd.ExecuteNonQuery();
-                    actualizado = Convert.ToBoolean(result.Value);
+
+                    if (result.Value != DBNull.Value)
+                        actualizado = Convert.ToBoolean(result.Value);
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine("Error al actualizar especialidad: " + ex.Message);
+                    throw new Exception("Error DALC - ActualizarEspecialidad", ex);
                 }
             }
 

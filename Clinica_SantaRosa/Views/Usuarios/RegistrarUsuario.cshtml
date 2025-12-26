@@ -38,9 +38,11 @@
     }
 
     .form-label {
-        font-weight: 500;
-        color: #4a5568;
-        font-size: 0.9rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        color: #94a3b8;
+        font-size: 0.75rem;
         margin-bottom: 0.5rem;
     }
 
@@ -51,23 +53,17 @@
         transition: border-color 0.2s, box-shadow 0.2s;
     }
 
-    .form-control:focus, .form-select:focus {
-        border-color: #3182ce;
-        box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.15);
-    }
-
-    /* Estilo de previsualización de Avatar */
-    .avatar-upload-container {
-        position: relative;
-        display: inline-block;
-    }
+        .form-control:focus, .form-select:focus {
+            border-color: #3182ce;
+            box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.15);
+        }
 
     .preview-img {
         display: none;
         width: 150px;
         height: 150px;
         object-fit: cover;
-        border-radius: 15px; /* Cuadrado redondeado para coincidir con el layout */
+        border-radius: 15px;
         border: 3px solid #fff;
         box-shadow: 0 4px 12px rgba(0,0,0,0.1);
         margin-bottom: 1rem;
@@ -80,6 +76,11 @@
         border-radius: 0 0 12px 12px;
         color: #a0aec0;
         font-size: 0.8rem;
+    }
+
+    input::placeholder {
+        color: #999999 !important; /* Un gris más claro o el color que prefieras */
+        opacity: 1; /* Necesario para Firefox */
     }
 </style>
 
@@ -94,13 +95,16 @@
         </div>
 
         <div class="card-body p-4 p-md-5">
-            <form asp-action="Registro" asp-controller="Usuarios" method="post" enctype="multipart/form-data" class="row g-4">
-                
+            <form asp-action="Registro" asp-controller="Usuarios" method="post" enctype="multipart/form-data" class="row g-4" autocomplete="off">
+
+                <input type="text" style="display:none" aria-hidden="true">
+                <input type="password" style="display:none" aria-hidden="true">
+
                 <div class="col-md-6">
                     <label asp-for="Username" class="form-label">Nombre de Usuario</label>
                     <div class="input-group">
                         <span class="input-group-text bg-white text-muted border-end-0"><i class="bi bi-at"></i></span>
-                        <input asp-for="Username" class="form-control border-start-0 ps-0" placeholder="Ej: jperrez01" required>
+                        <input asp-for="Username" class="form-control border-start-0 ps-0" placeholder="Ej: jperrez01" required autocomplete="off">
                     </div>
                 </div>
 
@@ -108,7 +112,7 @@
                     <label asp-for="Contrasenia" class="form-label">Contraseña</label>
                     <div class="input-group">
                         <span class="input-group-text bg-white text-muted border-end-0"><i class="bi bi-key"></i></span>
-                        <input asp-for="Contrasenia" type="password" class="form-control border-start-0 ps-0" placeholder="Min. 8 caracteres" required>
+                        <input asp-for="Contrasenia" type="password" class="form-control border-start-0 ps-0" placeholder="Min. 8 caracteres" required autocomplete="new-password">
                     </div>
                 </div>
 
@@ -116,12 +120,12 @@
 
                 <div class="col-md-6">
                     <label asp-for="Nombres" class="form-label">Nombres</label>
-                    <input asp-for="Nombres" class="form-control" placeholder="Juan Antonio" required>
+                    <input asp-for="Nombres" class="form-control" placeholder="Ejem: Juan Antonio" required>
                 </div>
 
                 <div class="col-md-6">
                     <label asp-for="Apellidos" class="form-label">Apellidos</label>
-                    <input asp-for="Apellidos" class="form-control" placeholder="Pérez García" required>
+                    <input asp-for="Apellidos" class="form-control" placeholder="Ejem Pérez García" required>
                 </div>
 
                 <div class="col-md-4">
@@ -131,7 +135,7 @@
 
                 <div class="col-md-4">
                     <label asp-for="Telefono" class="form-label">Teléfono</label>
-                    <input asp-for="Telefono" class="form-control" placeholder="987 654 321">
+                    <input asp-for="Telefono" class="form-control" placeholder="Ejem: 987 654 321">
                 </div>
 
                 <div class="col-md-4">
@@ -144,7 +148,7 @@
 
                 <div class="col-md-6">
                     <label asp-for="Correo" class="form-label">Correo Electrónico</label>
-                    <input asp-for="Correo" type="email" class="form-control" placeholder="usuario@clinicasr.com">
+                    <input asp-for="Correo" type="email" class="form-control" placeholder="Ejem: usuario@clinicasr.com">
                 </div>
 
                 <div class="col-md-6">
@@ -165,7 +169,7 @@
                     </a>
                     <div class="d-flex gap-2">
                         <a asp-action="EditarUsuario" class="btn btn-outline-secondary px-4">
-                             Ver Usuarios
+                            Ver Usuarios
                         </a>
                         <button type="submit" class="btn btn-primary px-5 shadow-sm">
                             <i class="bi bi-check-circle me-1"></i> Registrar Usuario
@@ -184,19 +188,50 @@
 @section Scripts {
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
-        // Mensajes del Servidor
-        const successMsg = '@TempData["Success"]';
-        const errorMsg = '@ViewBag.Error';
+        // 1. GESTIÓN DE ALERTAS (SweetAlert2)
+        // Ejecutar cuando el contenido del DOM esté cargado para evitar fallos de renderizado
+        document.addEventListener("DOMContentLoaded", function() {
+            // Usamos Html.Raw para que los mensajes con tildes o caracteres especiales funcionen bien en JS
+            const successMsg = '@Html.Raw(TempData["Success"])';
+            const errorMsg = '@Html.Raw(ViewBag.Error)';
 
-        if (successMsg) Swal.fire({ icon: 'success', title: '¡Éxito!', text: successMsg, confirmButtonColor: '#3182ce' });
-        if (errorMsg) Swal.fire({ icon: 'error', title: 'Atención', text: errorMsg });
+            if (successMsg && successMsg.trim() !== "") {
+                Swal.fire({
+                    icon: 'success',
+                    title: '¡Éxito!',
+                    text: successMsg,
+                    confirmButtonColor: '#3182ce'
+                });
+            }
 
-        // Previsualización (Optimizado)
+            if (errorMsg && errorMsg.trim() !== "") {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Atención',
+                    text: errorMsg,
+                    confirmButtonColor: '#e53e3e'
+                });
+            }
+        });
+
+        // 2. LIMPIEZA FORZADA POR JS
+        // Se mantiene tu lógica original para vaciar campos tras el autocompletado del navegador
+        window.onload = function() {
+            setTimeout(function() {
+                const userField = document.getElementById('Username');
+                const passField = document.getElementById('Contrasenia');
+                if (userField) userField.value = '';
+                if (passField) passField.value = '';
+            }, 50);
+        };
+
+        // 3. PREVISUALIZACIÓN DE IMAGEN
+        // Se mantiene tu lógica original para mostrar la foto seleccionada
         function previewImage(event) {
             const input = event.target;
             const preview = document.getElementById('preview');
             const previewText = document.getElementById('preview-text');
-            
+
             if (input.files && input.files[0]) {
                 const reader = new FileReader();
                 reader.onload = function(e) {
@@ -208,4 +243,5 @@
             }
         }
     </script>
+}
 }

@@ -123,7 +123,8 @@
                         <label class="form-label">Nueva Contraseña (Opcional)</label>
                         <div class="input-group">
                             <span class="input-group-text bg-white text-muted border-end-0"><i class="bi bi-key"></i></span>
-                            <input asp-for="Contrasenia" type="password" class="form-control border-start-0 ps-0" placeholder="Dejar en blanco para mantener" />
+                            <input asp-for="Contrasenia" type="password" value="" class="form-control border-start-0 ps-0"
+                                   placeholder="Dejar en blanco para mantener" autocomplete="new-password" />
                         </div>
                     </div>
 
