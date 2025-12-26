@@ -14,6 +14,7 @@ namespace ClinicaSR.BL.BE
         public TimeSpan Hora_Cita { get; set; }
         public string Motivo { get; set; }
         public EstadoCita Estado { get; set; }
+        public string TextoDisplay => $"Cita #{ID_Cita} - {PacienteBE?.Nombres} {PacienteBE?.Apellidos} ({Fecha_Cita:dd/MM/yyyy})";
     }
 
     public enum EstadoCita

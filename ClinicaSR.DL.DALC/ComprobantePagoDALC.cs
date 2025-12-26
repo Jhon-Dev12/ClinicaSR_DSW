@@ -1,91 +1,127 @@
-﻿using System;
+﻿using ClinicaSR.BL.BE;
+using Microsoft.Data.SqlClient;
+using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Text;
-using ClinicaSR.BL.BE;
-using Microsoft.Data.SqlClient;
 
 namespace ClinicaSR.DL.DALC
 {
     public class ComprobantePagoDALC
     {
+        // Listar todos los comprobantes
         public List<ComprobantePagoBE> ListarComprobantes()
         {
             List<ComprobantePagoBE> lista = new List<ComprobantePagoBE>();
 
             using (SqlConnection con = ConexionDALC.GetConnectionBDHospital())
             {
-                SqlCommand cmd = new SqlCommand("USP_Listar_Comprobantes", con);
-                cmd.CommandType = CommandType.StoredProcedure;
-                SqlDataReader dr = null;
+                SqlCommand cmd = new SqlCommand("USP_Listar_Comprobantes", con)
+                {
+                    CommandType = CommandType.StoredProcedure
+                };
 
                 try
                 {
                     con.Open();
-                    dr = cmd.ExecuteReader();
-                    while (dr.Read())
+                    using (SqlDataReader dr = cmd.ExecuteReader())
                     {
-                        ComprobantePagoBE comp = new ComprobantePagoBE
+                        while (dr.Read())
                         {
-                            ID_Comprobante = dr.GetInt32(0),
-                            Nombre_Pagador = dr.GetString(1),
-                            Apellidos_Pagador = dr.GetString(2),
-                            DNI_Pagador = dr.GetString(3),
-                            Contacto_Pagador = dr.GetString(4),
-                            Fecha_Emision = dr.GetDateTime(5),
-                            Monto = dr.GetDecimal(6),
-                            Metodo_Pago = (MetodoPago)Enum.Parse(typeof(MetodoPago), dr.GetString(7)),
-                            Estado_Pago = (EstadoComprobante)Enum.Parse(typeof(EstadoComprobante), dr.GetString(8))
-                        };
-                        lista.Add(comp);
+                            lista.Add(new ComprobantePagoBE
+                            {
+                                ID_Comprobante = dr.GetInt64(dr.GetOrdinal("ID_Comprobante")),
+                                CitaBE = new CitaBE { ID_Cita = dr.GetInt64(dr.GetOrdinal("ID_Cita")) },
+                                Id_Usuario = dr.GetInt64(dr.GetOrdinal("ID_Usuario")),
+                                Nombre_Pagador = dr["Nombre_Pagador"].ToString(),
+                                Apellidos_Pagador = dr["Apellidos_Pagador"].ToString(),
+                                DNI_Pagador = dr["DNI_Pagador"] == DBNull.Value ? null : dr["DNI_Pagador"].ToString(),
+                                Contacto_Pagador = dr["Contacto_Pagador"] == DBNull.Value ? null : dr["Contacto_Pagador"].ToString(),
+                                Fecha_Emision = Convert.ToDateTime(dr["Fecha_Emision"]),
+                                Monto = Convert.ToDecimal(dr["Monto"]),
+                                Metodo_Pago = Enum.Parse<MetodoPago>(dr["Metodo_Pago"].ToString()),
+                                Estado = Enum.Parse<EstadoComprobante>(dr["Estado"].ToString())
+                            });
+                        }
                     }
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine("Error al listar comprobantes: " + ex.Message);
-                }
-                finally
-                {
-                    if (dr != null && !dr.IsClosed) dr.Close();
+                    throw new Exception("Error en ComprobantePagoDALC.ListarComprobantes: " + ex.Message);
                 }
             }
 
             return lista;
         }
 
-        // 2. Actualizar estado de comprobante
-        public bool Actualizar(int id)
+        // Registrar un comprobante
+        public bool Registrar(ComprobantePagoBE obj)
         {
-            bool actualizado = false;
+            bool exito = false;
 
             using (SqlConnection con = ConexionDALC.GetConnectionBDHospital())
             {
-                SqlCommand cmd = new SqlCommand("USP_Actualizar_Comprobante", con);
-                cmd.CommandType = CommandType.StoredProcedure;
-
-                cmd.Parameters.AddWithValue("@ID_Comprobante", id);
-
-                SqlParameter result = new SqlParameter("@Result", SqlDbType.Bit)
+                SqlCommand cmd = new SqlCommand("USP_Registrar_Comprobante", con)
                 {
-                    Direction = ParameterDirection.Output
+                    CommandType = CommandType.StoredProcedure
                 };
-                cmd.Parameters.Add(result);
+
+                cmd.Parameters.AddWithValue("@ID_Cita", obj.CitaBE.ID_Cita);
+                cmd.Parameters.AddWithValue("@ID_Usuario", obj.Id_Usuario);
+                cmd.Parameters.AddWithValue("@Nombre_Pagador", obj.Nombre_Pagador);
+                cmd.Parameters.AddWithValue("@Apellidos_Pagador", obj.Apellidos_Pagador);
+                cmd.Parameters.AddWithValue("@DNI_Pagador", obj.DNI_Pagador ?? (object)DBNull.Value);
+                cmd.Parameters.AddWithValue("@Contacto_Pagador", obj.Contacto_Pagador ?? (object)DBNull.Value);
+                cmd.Parameters.AddWithValue("@Monto", obj.Monto);
+                cmd.Parameters.AddWithValue("@Metodo_Pago", obj.Metodo_Pago.ToString());
+
+                SqlParameter output = new SqlParameter("@Result", SqlDbType.Bit) { Direction = ParameterDirection.Output };
+                cmd.Parameters.Add(output);
 
                 try
                 {
                     con.Open();
                     cmd.ExecuteNonQuery();
-                    actualizado = Convert.ToBoolean(result.Value);
+                    exito = Convert.ToBoolean(output.Value);
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine("Error al actualizar comprobante: " + ex.Message);
+                    throw new Exception("Error en ComprobantePagoDALC.Registrar: " + ex.Message);
                 }
             }
 
-            return actualizado;
+            return exito;
         }
 
+        // Anular comprobante
+        public bool Anular(long idComprobante)
+        {
+            bool exito = false;
 
+            using (SqlConnection con = ConexionDALC.GetConnectionBDHospital())
+            {
+                SqlCommand cmd = new SqlCommand("USP_Anular_Comprobante", con)
+                {
+                    CommandType = CommandType.StoredProcedure
+                };
+
+                cmd.Parameters.AddWithValue("@ID_Comprobante", idComprobante);
+
+                SqlParameter output = new SqlParameter("@Result", SqlDbType.Bit) { Direction = ParameterDirection.Output };
+                cmd.Parameters.Add(output);
+
+                try
+                {
+                    con.Open();
+                    cmd.ExecuteNonQuery();
+                    exito = Convert.ToBoolean(output.Value);
+                }
+                catch (Exception ex)
+                {
+                    throw new Exception("Error en ComprobantePagoDALC.Anular: " + ex.Message);
+                }
+            }
+
+            return exito;
+        }
     }
 }

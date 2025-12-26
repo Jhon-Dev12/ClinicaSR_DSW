@@ -27,15 +27,6 @@ GO
 INSERT INTO Usuario (Username, Contrasenia, Nombres, Apellidos, DNI, Telefono, Correo, Rol)
 VALUES 
 	('admin1', CONVERT(varchar(255), HASHBYTES('SHA2_512', '1234'), 2), 'Ricardo', 'Mendoza Arce', '12345678', '945123456', 'admin@hospital.com', 'ADMINISTRADOR'),
-	('recep1', CONVERT(varchar(255), HASHBYTES('SHA2_512', '1234'), 2), 'Laura Maria', 'Garc a Torres', '87654321', '987654321', 'lgarcia@hospital.com', 'RECEPCIONISTA'),
+	('recep1', CONVERT(varchar(255), HASHBYTES('SHA2_512', '1234'), 2), 'Laura Maria', 'Garcia Torres', '87654321', '987654321', 'lgarcia@hospital.com', 'RECEPCIONISTA'),
 	('caje1', CONVERT(varchar(255), HASHBYTES('SHA2_512', '1234'), 2), 'Marcos Fernando', 'Villanueva Ruiz', '44556677', '912345678', 'mvillanueva@hospital.com', 'CAJERO');
 GO
-
---DROP DATABASE BDSeg
---GO
-
-SELECT * FROM usuario
-go
-
---alter database BDSeg set single_user with rollback immediate
---go

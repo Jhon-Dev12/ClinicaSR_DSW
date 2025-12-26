@@ -49,7 +49,7 @@ namespace Clinica_SantaRosa.PL.WebApp.Controllers
                 _usuarioBC.RegistrarUsuario(usuario);
 
                 TempData["Success"] = $"El usuario {usuario.Username} ha sido registrado correctamente.";
-                return RedirectToAction("PanelAdministrador", "Home");
+                return RedirectToAction("RegistrarUsuario");
             }
             catch (Exception ex)
             {
@@ -118,11 +118,11 @@ namespace Clinica_SantaRosa.PL.WebApp.Controllers
                 if (usuario.ID_Usuario == idUsuarioLogueado)
                 {
                     HttpContext.Session.Clear(); // Limpiamos la sesión
-                    TempData["Success"] = "Datos actualizados. Inicie sesión de nuevo.";
+                    TempData["Success"] = "Datos actualizados, ingrese al sistema de nuevo.";
                     return RedirectToAction("Login", "Seguridad");
                 }
-
-                return RedirectToAction("PanelAdministrador", "Home");
+                TempData["Success"] = "Datos del usuario actualizado.";
+                return RedirectToAction("RegistrarUsuario");
             }
             catch (Exception ex)
             {
